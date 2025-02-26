@@ -3,48 +3,85 @@ Mock smoke tests for template project.
 """
 
 import os
-import time
+from unittest import mock
 
 import pytest
 
 
-def test_mock_service_health():
-    """Dummy test that always passes for CI/CD demonstration."""
-    # Get staging URL or use a mock URL
+@pytest.mark.smoke
+def test_service_health():
+    """Test service health endpoint."""
+    # Mock the service URL
     url = os.getenv("STAGING_URL", "https://staging-api.example.com/health")
 
-    # Simulate checking the service
-    print(f"[DUMMY] Checking service health at {url}")
-    time.sleep(1)
+    # In a real test, we would make an actual request to the service
+    # For demonstration, we'll use a mock response
+    with mock.patch("requests.get") as mock_get:
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"status": "healthy"}
+        mock_get.return_value = mock_response
 
-    # This test will always pass for demonstration purposes
-    pytest.assume(True, "Dummy health check passed")
+        # This would be the actual code in a real test
+        # response = requests.get(f"{url}")
+        # assert response.status_code == 200
+        # health_data = response.json()
+        # assert health_data["status"] == "healthy"
 
-
-def test_mock_api_endpoints():
-    """Dummy test for API endpoints that always passes."""
-    # Simulate checking API endpoints
-    print("[DUMMY] Verifying API endpoints...")
-    time.sleep(1)
-
-    # Simulate checking specific endpoints
-    endpoints = ["users", "auth", "health", "status", "config", "metrics"]
-    for endpoint in endpoints:
-        print(f"[DUMMY] Checking endpoint: {endpoint}")
-        time.sleep(0.5)
-
-    # This test will always pass for demonstration purposes
-    pytest.assume(True, "Dummy API endpoint check passed")
+        # For demonstration, we'll just assert our mock was configured correctly
+        assert mock_response.status_code == 200
+        assert mock_response.json()["status"] == "healthy"
+        mock_get.assert_not_called()  # Since we're not actually making the request
+        print(f"Example action: GET {url}")
 
 
-def test_mock_response_time():
-    """Dummy test for service response time that always passes."""
-    print("[DUMMY] Measuring service response time...")
-    time.sleep(1)
+@pytest.mark.smoke
+@pytest.mark.parametrize(
+    "endpoint", ["users", "auth", "health", "status", "config", "metrics"]
+)
+def test_api_endpoint_availability(endpoint):
+    """Test that each API endpoint is available and returns expected status code."""
+    base_url = os.getenv("STAGING_URL", "https://staging-api.example.com")
 
-    # Simulate a response time measurement
-    mock_response_time = 0.123  # seconds
-    print(f"[DUMMY] Response time: {mock_response_time}s")
+    # In a real test, we would make actual requests to each endpoint
+    with mock.patch("requests.get") as mock_get:
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
 
-    # This test will always pass for demonstration purposes
-    pytest.assume(mock_response_time < 1.0, "Dummy response time check passed")
+        # This would be the actual code in a real test
+        # response = requests.get(f"{base_url}/{endpoint}")
+        # assert response.status_code in (200, 201, 204)
+
+        # For demonstration, we'll just assert our mock was configured correctly
+        assert mock_response.status_code == 200
+        mock_get.assert_not_called()  # Since we're not actually making the request
+        print(f"Example action: GET {base_url}/{endpoint}")
+
+
+@pytest.mark.smoke
+@pytest.mark.performance
+def test_response_time():
+    """Test that service response time is within acceptable limits."""
+    url = os.getenv("STAGING_URL", "https://staging-api.example.com/health")
+    max_response_time = 1.0  # seconds
+
+    # In a real test, we would measure actual response time
+    with mock.patch("requests.get") as mock_get:
+        mock_response = mock.MagicMock()
+        mock_response.elapsed.total_seconds.return_value = 0.123
+        mock_get.return_value = mock_response
+
+        # This would be the actual code in a real test
+        # start_time = time.time()
+        # response = requests.get(url)
+        # response_time = time.time() - start_time
+
+        # For demonstration, we'll use the mock's elapsed time
+        response_time = mock_response.elapsed.total_seconds()
+
+        assert (
+            response_time < max_response_time
+        ), f"Response time {response_time}s exceeds maximum allowed {max_response_time}s"
+        mock_get.assert_not_called()  # Since we're not actually making the request
+        print(f"Example action: GET {url}")

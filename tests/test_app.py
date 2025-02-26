@@ -10,16 +10,17 @@ import pytest
 from src.app import get_config, hello
 
 
-def test_hello_default():
-    """Test hello function with default argument."""
-    result = hello()
-    pytest.assume(result == "Hello, World!")
-
-
-def test_hello_custom_name():
-    """Test hello function with custom name."""
-    result = hello("GitHub")
-    pytest.assume(result == "Hello, GitHub!")
+@pytest.mark.parametrize(
+    "name,expected",
+    [
+        (None, "Hello, World!"),
+        ("GitHub", "Hello, GitHub!"),
+    ],
+)
+def test_hello(name, expected):
+    """Test hello function with various inputs."""
+    result = hello(name)
+    assert result == expected
 
 
 def test_hello_empty_name():
@@ -28,16 +29,26 @@ def test_hello_empty_name():
         hello("")
 
 
-def test_get_config_default():
-    """Test get_config with default environment."""
-    with mock.patch.dict(os.environ, {}, clear=True):
-        config = get_config()
-        pytest.assume(config["environment"] == "development")
-        pytest.assume(config["version"] == "0.1.0")
+class TestConfig:
+    """Tests for the get_config function."""
 
+    def test_default_environment(self):
+        """Test get_config with default environment."""
+        with mock.patch.dict(os.environ, {}, clear=True):
+            config = get_config()
+            assert config["environment"] == "development"
+            assert config["version"] == "0.1.0"
+            assert "debug" in config, "Config should contain debug key"
 
-def test_get_config_custom_env():
-    """Test get_config with custom environment."""
-    with mock.patch.dict(os.environ, {"APP_ENV": "staging"}, clear=True):
-        config = get_config()
-        pytest.assume(config["environment"] == "staging")
+    def test_custom_environment(self):
+        """Test get_config with custom environment."""
+        with mock.patch.dict(os.environ, {"APP_ENV": "staging"}, clear=True):
+            config = get_config()
+            assert config["environment"] == "staging"
+            assert "version" in config, "Config should contain version key"
+
+    def test_production_environment(self):
+        """Test get_config with production environment."""
+        with mock.patch.dict(os.environ, {"APP_ENV": "production"}, clear=True):
+            config = get_config()
+            assert config["environment"] == "production"
