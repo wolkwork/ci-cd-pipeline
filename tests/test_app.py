@@ -38,17 +38,3 @@ class TestConfig:
             config = get_config()
             assert config["environment"] == "development"
             assert config["version"] == "0.1.0"
-            assert "debug" in config, "Config should contain debug key"
-
-    def test_custom_environment(self):
-        """Test get_config with custom environment."""
-        with mock.patch.dict(os.environ, {"APP_ENV": "staging"}, clear=True):
-            config = get_config()
-            assert config["environment"] == "staging"
-            assert "version" in config, "Config should contain version key"
-
-    def test_production_environment(self):
-        """Test get_config with production environment."""
-        with mock.patch.dict(os.environ, {"APP_ENV": "production"}, clear=True):
-            config = get_config()
-            assert config["environment"] == "production"

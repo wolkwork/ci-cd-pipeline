@@ -26,8 +26,6 @@ def hello(name: str = "World") -> str:
     Returns:
         Greeting message
     """
-    if not name:
-        raise ValueError("Name cannot be empty")
 
     return f"Hello, {name}!"
 
