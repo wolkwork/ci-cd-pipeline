@@ -16,7 +16,7 @@ def get_config() -> Dict[str, str]:
     return {"environment": os.getenv("APP_ENV", "development"), "version": "0.1.0"}
 
 
-def hello(name: str = "World") -> str:
+def hello(name: str = None) -> str:
     """
     Return a greeting message.
 
@@ -25,7 +25,14 @@ def hello(name: str = "World") -> str:
 
     Returns:
         Greeting message
+
+    Raises:
+        ValueError: If name is an empty string
     """
+    if name is None:
+        name = "World"
+    elif name == "":
+        raise ValueError("Name cannot be empty")
 
     return f"Hello, {name}!"
 
