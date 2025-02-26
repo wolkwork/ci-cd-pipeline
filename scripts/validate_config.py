@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-Mock configuration validation script for template project.
+Mock configuration validation script for ci/cd pipeline.
+Normally this would include pre-deployment validations.
 """
 import os
 import sys
