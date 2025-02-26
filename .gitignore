@@ -1,0 +1,36 @@
+# General files to ignore for git
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Unit test / coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# mypy
+.mypy_cache/
+
+# IDE files
+.idea/
+.vscode/
+
+# OS specific files
+.DS_Store
+
+# Trunk
+.trunk/
