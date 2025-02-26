@@ -16,8 +16,8 @@ flowchart TD
 
     style A fill:#d0e0ff,stroke:#0066cc
     style B fill:#d0ffe0,stroke:#00cc66
-    style C fill:#ffcc99,stroke:#00cc66
-    style D fill:#ffcc99,stroke:#00cc66
+    style C fill:#ffdca9,stroke:#ffcc99
+    style D fill:#ffdca9,stroke:#ffcc99
     style E fill:#ffe0d0,stroke:#cc6600
 ```
 
