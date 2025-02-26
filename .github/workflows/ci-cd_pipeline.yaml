@@ -89,7 +89,7 @@ jobs:
   deploy:
     needs: [quality, security] # Only deploy if all quality and security checks pass
     runs-on: ubuntu-latest
-    environment: staging # Use GitHub environments for deployment
+    environment: staging
     # if: github.ref == 'refs/heads/main'
 
     steps:
@@ -127,9 +127,5 @@ jobs:
         run: |
           echo "::notice::Deployment to staging ${{ job.status == 'success' && 'succeeded' || 'failed' }}"
 
-          # Create deployment status file
-          echo "Deployment status: ${{ job.status }}" > deployment_status.txt
-          echo "Completed at: $(date)" >> deployment_status.txt
-
-          # Upload status as an artifact
-          uv run python scripts/notify_deployment.py --status "${{ job.status }}"
+          echo "Deployment status: ${{ job.status }}"
+          echo "Completed at: $(date)"
