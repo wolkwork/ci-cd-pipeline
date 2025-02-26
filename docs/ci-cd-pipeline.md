@@ -8,63 +8,17 @@ Our CI/CD pipeline automates the process of testing, validating, and deploying t
 
 ```mermaid
 flowchart TD
-    %% Main workflow steps
-    A[Push Code to Repo] --> B[Test Job]
-    B --> C[Quality Job]
-    B --> D[Security Job]
-    C --> E[Deploy Job]
+    A[Push Code to Repo] --> B[Test]
+    B --> C[Quality]
+    B --> D[Security]
+    C --> E[Deploy]
     D --> E
 
-    %% Test job substeps
-    B --> B1[Setup Python]
-    B1 --> B2[Install Dependencies]
-    B2 --> B3[Run Unit Tests]
-    B3 --> B4[Generate Coverage Report]
-
-    %% Quality job substeps
-    C --> C1[Run Ruff Linting]
-    C1 --> C2[Run Code Formatting]
-    C2 --> C3[Run Type Checking]
-
-    %% Security job substeps
-    D --> D1[Check Dependencies]
-    D1 --> D2[Run Security Scan]
-
-    %% Deploy job substeps
-    E --> E1[Build Application]
-    E1 --> E2[Validate Config]
-    E2 --> E3[Deploy to Staging]
-    E3 --> E4[Run Smoke Tests]
-    E4 --> E5[Deployment Complete]
-
-    %% Styling
     style A fill:#d0e0ff,stroke:#0066cc
     style B fill:#d0ffe0,stroke:#00cc66
-    style C fill:#d0ffe0,stroke:#00cc66
-    style D fill:#d0ffe0,stroke:#00cc66
+    style C fill:#ffcc99,stroke:#00cc66
+    style D fill:#ffcc99,stroke:#00cc66
     style E fill:#ffe0d0,stroke:#cc6600
-
-    %% Test job styling
-    style B1 fill:#e0ffe0,stroke:#00cc66
-    style B2 fill:#e0ffe0,stroke:#00cc66
-    style B3 fill:#e0ffe0,stroke:#00cc66
-    style B4 fill:#e0ffe0,stroke:#00cc66
-
-    %% Quality job styling
-    style C1 fill:#e0ffe0,stroke:#00cc66
-    style C2 fill:#e0ffe0,stroke:#00cc66
-    style C3 fill:#e0ffe0,stroke:#00cc66
-
-    %% Security job styling
-    style D1 fill:#e0ffe0,stroke:#00cc66
-    style D2 fill:#e0ffe0,stroke:#00cc66
-
-    %% Deploy job styling
-    style E1 fill:#ffe0d0,stroke:#cc6600
-    style E2 fill:#ffe0d0,stroke:#cc6600
-    style E3 fill:#ffe0d0,stroke:#cc6600
-    style E4 fill:#ffe0d0,stroke:#cc6600
-    style E5 fill:#ffe0d0,stroke:#cc6600
 ```
 
 ## Pipeline Stages
@@ -122,31 +76,31 @@ The following diagram shows the detailed workflow of our CI/CD pipeline:
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                         Test Job                            │
+│                          Test Job                           │
 │                                                             │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐      │
-│  │  Run Tests  │ -> │   Coverage  │ -> │Report Results│     │
-│  └─────────────┘    └─────────────┘    └─────────────┘      │
+│  ┌─────────────┐    ┌─────────────┐    ┌──-──────────--─┐   │
+│  │  Run Tests  │ -> │  Coverage   │ -> │ Report Results │   │
+│  └─────────────┘    └─────────────┘    └───-─────────--─┘   │
 └─────────────────────────────────────────────────────────────┘
                                │
                  ┌─────────────┴─────────────┐
                  ▼                           ▼
-┌─────────────────────────────┐   ┌─────────────────────────────┐
-│       Quality Job           │   │       Security Job          │
-│                             │   │                             │
-│  ┌─────────┐  ┌───────────┐ │   │ ┌─────────┐  ┌───────────┐  │
-│  │ Linting │->│Type Check │ │   │ │Dep Scan │->│Code Scan  │  │
-│  └─────────┘  └───────────┘ │   │ └─────────┘  └───────────┘  │
-└─────────────────────────────┘   └─────────────────────────────┘
+┌─────────────────────────-────┐  ┌───────────────────────────-──┐
+│         Quality Job          │  │         Security Job         │
+│                              │  │                              │
+│  ┌─────────┐  ┌───────-────┐ │  │ ┌───────--─┐  ┌───────────┐  │
+│  │ Linting │->│ Type Check │ │  │ │ Dep Scan │->│ Code Scan │  │
+│  └─────────┘  └─────-──────┘ │  │ └─────-────┘  └───────────┘  │
+└────────────────────────-─────┘  └────────────────────────-─────┘
                  │                           │
                  └─────────────┬─────────────┘
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                        Deploy Job                           │
 │                                                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────┐     │
-│  │  Build  │->│Validate │->│ Deploy  │->│ Smoke Tests │     │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────────┘     │
+│  ┌─────────┐  ┌──────-───┐  ┌───────-──┐  ┌─────────────┐   │
+│  │  Build  │->│ Validate │->│  Deploy  │->│ Smoke Tests │   │
+│  └─────────┘  └────────-─┘  └──────-───┘  └─────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
