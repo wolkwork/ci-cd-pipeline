@@ -21,11 +21,11 @@ flowchart TD
     C --> E[Deploy]
     D --> E
 
-    style A fill:#d0e0ff
-    style B fill:#d0ffe0
-    style C fill:#ffe6c2
-    style D fill:#ffe6c2
-    style E fill:#ffd0d0
+    style A fill:#d0e0ff,stroke:#d0e0ff
+    style B fill:#d0ffe0,stroke:#d0ffe0
+    style C fill:#ffdca9,stroke:#ffdca9
+    style D fill:#ffdca9,stroke:#ffdca9
+    style E fill:#ffd0d0,stroke:#ffd0d0
 ```
 
 ## Setup
