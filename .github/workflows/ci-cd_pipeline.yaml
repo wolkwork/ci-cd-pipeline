@@ -1,0 +1,135 @@
+# Enhanced CI/CD workflow for Python projects
+name: CI/CD Pipeline
+
+# Define workflow triggers
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+# Define environment variables used across jobs
+env:
+  PYTHON_VERSION: "3.12"
+  UV_VERSION: ">=0.4.0"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10 # Prevent hanging jobs
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run tests with coverage reporting
+        run: >
+          uv run pytest
+          --cov=src
+          --cov-report=term-missing
+          --cov-report=html
+          --cov-fail-under=80
+
+  quality:
+    runs-on: ubuntu-latest
+    needs: test # Run only after tests pass
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install quality tools
+        run: uv sync
+
+      - name: Run linting
+        # Optional: auto-correct minor issues through --fix
+        run: |
+          uv run ruff check . --fix --exit-zero
+          uv run ruff format .
+
+      - name: Run type checking
+        run: uv run mypy src/
+
+  security:
+    runs-on: ubuntu-latest
+    needs: test # Run only after tests pass
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install security tools
+        run: uv sync
+
+      - name: Check dependencies for vulnerabilities
+        run: uv run safety check
+
+      - name: Run security scan
+        run: uv run bandit -r src/ -c pyproject.toml
+
+  deploy:
+    needs: [quality, security] # Only deploy if all checks pass
+    runs-on: ubuntu-latest
+    environment: staging # Use GitHub environments for deployment
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build application
+        run: uv run python -m build
+
+      - name: Run pre-deployment checks
+        run: |
+          echo "Running pre-deployment validation..."
+          uv run python scripts/validate_config.py
+
+      - name: Dummy deployment to staging
+        run: |
+          echo "Starting dummy deployment to staging..."
+          uv run python scripts/deploy.py --environment staging
+
+      - name: Run dummy smoke tests
+        run: |
+          echo "Running post-deployment checks..."
+          uv run pytest tests/smoke/
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          echo "::notice::Deployment to staging ${{ job.status == 'success' && 'succeeded' || 'failed' }}"
+
+          # Create deployment status file
+          echo "Deployment status: ${{ job.status }}" > deployment_status.txt
+          echo "Completed at: $(date)" >> deployment_status.txt
+
+          # Upload status as an artifact
+          uv run python scripts/notify_deployment.py --status "${{ job.status }}"
