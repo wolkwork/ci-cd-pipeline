@@ -59,7 +59,7 @@ jobs:
         # Optional: auto-correct minor issues through --fix
         run: |
           uv run ruff check . --fix --exit-zero
-          uv run ruff format .
+          uv run ruff format . --line-length=120
 
       - name: Run type checking
         run: uv run mypy src/
@@ -87,10 +87,10 @@ jobs:
         run: uv run bandit -r src/ -c pyproject.toml
 
   deploy:
-    needs: [quality, security] # Only deploy if all checks pass
+    needs: [quality, security] # Only deploy if all quality and security checks pass
     runs-on: ubuntu-latest
     environment: staging # Use GitHub environments for deployment
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
