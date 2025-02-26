@@ -31,7 +31,7 @@ def deploy(environment):
     deploy_url = os.getenv(
         f"{environment.upper()}_URL", f"https://{environment}-example.com"
     )
-    print(f"[DUMMY] Deploying to {environment} at {deploy_url}...")
+    print(f"[DUMMY] Deploying to dummy {environment} environment at {deploy_url}...")
 
     # Simulate deployment steps with delays
     steps = [
@@ -61,7 +61,9 @@ def deploy(environment):
     except Exception as e:
         print(f"Warning: Could not create mock deployment artifact: {e}")
 
-    print(f"[DUMMY] Application successfully deployed to {environment}!")
+    print(
+        f"[DUMMY] Application successfully deployed to dummy {environment} environment!"
+    )
     return True
 
 

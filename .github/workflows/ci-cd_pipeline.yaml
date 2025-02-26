@@ -6,7 +6,7 @@ on:
   push:
     branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 # Define environment variables used across jobs
 env:
@@ -56,7 +56,7 @@ jobs:
         run: uv sync
 
       - name: Run linting
-        # Optional: auto-correct minor issues through --fix
+        # Optional: auto-correct minor issues with --fix and set --line-length
         run: |
           uv run ruff check . --fix --exit-zero
           uv run ruff format . --line-length=120
@@ -90,7 +90,7 @@ jobs:
     needs: [quality, security] # Only deploy if all quality and security checks pass
     runs-on: ubuntu-latest
     environment: staging
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # Only deploy on main branch
 
     steps:
       - uses: actions/checkout@v4
