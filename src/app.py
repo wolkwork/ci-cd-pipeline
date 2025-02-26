@@ -16,7 +16,7 @@ def get_config() -> Dict[str, str]:
     return {"environment": os.getenv("APP_ENV", "development"), "version": "0.1.0"}
 
 
-def hello(name: str = None) -> str:
+def hello(name: str | None = None) -> str:
     """
     Return a greeting message.
 
