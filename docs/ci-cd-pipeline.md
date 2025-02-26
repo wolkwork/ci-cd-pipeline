@@ -18,7 +18,7 @@ flowchart TD
     style B fill:#d0ffe0,stroke:#4cdb93
     style C fill:#ffdca9,stroke:#ffcc99
     style D fill:#ffdca9,stroke:#ffcc99
-    style E fill:#ffe0d0,stroke:#db934c
+    style E fill:#ffd0d0,stroke:#db934c
 ```
 
 ## Pipeline Stages
