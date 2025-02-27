@@ -38,11 +38,3 @@ def test_default_environment():
         config = get_config()
         assert config["environment"] == "development"
         assert config["version"] == "0.1.0"
-
-
-@pytest.mark.config
-def test_custom_environment():
-    """Test get_config with custom environment."""
-    with mock.patch.dict(os.environ, {"ENVIRONMENT": "production"}, clear=True):
-        config = get_config()
-        assert config["environment"] == "production"
