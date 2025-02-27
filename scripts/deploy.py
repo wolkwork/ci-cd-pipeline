@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Mock deployment script for template project.
+Mock deployment script for CI/CD pipeline template project.
 """
 import argparse
 import os
@@ -22,7 +22,7 @@ def deploy(environment):
         print(f"Invalid environment: {environment}")
         return False
 
-    # For template purposes, we'll consider DEPLOY_TOKEN optional
+    # For template purposes, we'll consider DEPLOY_TOKEN optional with a default value
     token = os.getenv("DEPLOY_TOKEN", "dummy-token-for-demo")
     if token == "dummy-token-for-demo":
         print("Note: Using dummy deployment token")
@@ -33,7 +33,7 @@ def deploy(environment):
     )
     print(f"[DUMMY] Deploying to dummy {environment} environment at {deploy_url}...")
 
-    # Simulate deployment steps with delays
+    # Simulate some dummy deployment steps with delays
     steps = [
         "Preparing build artifacts...",
         "Running pre-deployment checks...",
@@ -45,10 +45,9 @@ def deploy(environment):
 
     for step in steps:
         print(f"[DUMMY] {step}")
-        # Simulate work happening
         time.sleep(1)
 
-    # Create a mock deployment artifact
+    # Create a dummy deployment artifact
     try:
         os.makedirs("dist", exist_ok=True)
         with open(os.path.join("dist", f"{environment}_deployment.log"), "w") as f:
@@ -71,6 +70,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Dummy deployment for template project"
     )
+
     parser.add_argument(
         "--environment",
         "-e",

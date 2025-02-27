@@ -22,7 +22,7 @@ def test_service_health():
         mock_response.json.return_value = {"status": "healthy"}
         mock_get.return_value = mock_response
 
-        # This would be the actual code in a real test
+        # Here could be the actual code for a real test, e.g.:
         # response = requests.get(f"{url}")
         # assert response.status_code == 200
         # health_data = response.json()
@@ -43,13 +43,13 @@ def test_api_endpoint_availability(endpoint):
     """Test that each API endpoint is available and returns expected status code."""
     base_url = os.getenv("STAGING_URL", "https://staging-api.example.com")
 
-    # In a real test, we would make actual requests to each endpoint
+    # In a real test, we would make actual requests to endpoints
     with mock.patch("requests.get") as mock_get:
         mock_response = mock.MagicMock()
         mock_response.status_code = 200
         mock_get.return_value = mock_response
 
-        # This would be the actual code in a real test
+        # Here could be the actual code for a real test, e.g.:
         # response = requests.get(f"{base_url}/{endpoint}")
         # assert response.status_code in (200, 201, 204)
 
@@ -72,7 +72,7 @@ def test_response_time():
         mock_response.elapsed.total_seconds.return_value = 0.123
         mock_get.return_value = mock_response
 
-        # This would be the actual code in a real test
+        # Here could be the actual code for a real test, e.g.:
         # start_time = time.time()
         # response = requests.get(url)
         # response_time = time.time() - start_time
