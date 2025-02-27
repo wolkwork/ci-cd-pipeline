@@ -7,7 +7,7 @@ from unittest import mock
 
 import pytest
 
-from src.app import get_config, hello
+from src.app import get_config, hello, main
 
 
 @pytest.mark.unit
@@ -38,3 +38,25 @@ def test_default_environment():
         config = get_config()
         assert config["environment"] == "development"
         assert config["version"] == "0.1.0"
+
+
+@pytest.mark.config
+def test_custom_environment():
+    """Test get_config with custom environment."""
+    with mock.patch.dict(os.environ, {"APP_ENV": "production"}, clear=True):
+        config = get_config()
+        assert config["environment"] == "production"
+        assert config["version"] == "0.1.0"
+
+
+@pytest.mark.unit
+def test_main():
+    """Test main function execution."""
+    with mock.patch("builtins.print") as mock_print:
+        with mock.patch(
+            "src.app.get_config",
+            return_value={"environment": "test", "version": "0.1.0"},
+        ):
+            main()
+            mock_print.assert_any_call("Starting application in test mode")
+            mock_print.assert_any_call("Hello, World!")
