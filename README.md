@@ -67,15 +67,6 @@ uv run ruff check .
 uv run mypy src/
 ```
 
-## GitHub Actions Configuration
-
-The workflow is configured to run automatically when:
-
-- Pushing to the `main` or `dev` branch
-- Creating a pull request targeting the `main` or `dev` branch
-
-The deployment job only runs on the `main` branch and not on pull requests.
-
 ## Workflow
 
 ```
@@ -112,6 +103,15 @@ The deployment job only runs on the `main` branch and not on pull requests.
 │  └─────────┘  └────────-─┘  └──────-───┘  └─────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+## GitHub Actions Configuration
+
+The workflow is configured to run automatically when:
+
+- Pushing to the `main` or `dev` branch
+- Creating a pull request targeting the `main` or `dev` branch
+
+The deployment job only runs on the `main` branch and not on pull requests.
 
 ## License
 
