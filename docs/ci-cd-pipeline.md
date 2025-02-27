@@ -1,17 +1,10 @@
-# CI/CD Pipeline
+# CI/CD Pipeline Documentation
 
-A simple Python project demonstrating a complete CI/CD pipeline using GitHub Actions and `uv` package manager.
+This document explains the Continuous Integration and Continuous Deployment (CI/CD) pipeline implemented in this project.
 
-## CI/CD Pipeline Steps
+## Pipeline Overview
 
-This project uses GitHub Actions to implement a CI/CD pipeline with the following stages:
-
-1. **Test**: Runs unit tests with code coverage
-2. **Quality**: Performs code quality checks (linting and type checking)
-3. **Security**: Scans for security vulnerabilities
-4. **Deploy**: Simulates deployment to a staging environment
-
-## CI/CD Pipeline Diagram
+Our CI/CD pipeline automates the process of testing, validating, and deploying the application. It consists of several stages that run sequentially and in parallel to ensure code quality and reliability.
 
 ```mermaid
 flowchart TD
@@ -21,62 +14,60 @@ flowchart TD
     C --> E[Deploy]
     D --> E
 
-    style A fill:#d0e0ff,stroke:#d0e0ff
-    style B fill:#d0ffe0,stroke:#d0ffe0
-    style C fill:#ffdca9,stroke:#ffdca9
-    style D fill:#ffdca9,stroke:#ffdca9
-    style E fill:#ffd0d0,stroke:#ffd0d0
+    style A fill:#d0e0ff,stroke:#4c93db
+    style B fill:#d0ffe0,stroke:#4cdb93
+    style C fill:#ffdca9,stroke:#ffcc99
+    style D fill:#ffdca9,stroke:#ffcc99
+    style E fill:#ffd0d0,stroke:#db934c
 ```
 
-## Setup
+## Pipeline Stages
 
-1. Clone the repository:
+### 1. Test Stage
 
-   ```bash
-   git clone https://github.com/wolkwork/ci-cd-pipeline.git
-   cd ci-cd-pipeline
-   ```
+The test stage runs unit tests and calculates code coverage.
 
-2. Install uv (if not already installed):
+**Key Steps:**
 
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
+- Check out the repository
+- Set up Python environment
+- Install dependencies
+- Run pytest with coverage reporting
+- Fail if coverage is below 80%
 
-3. Create a virtual environment and install dependencies:
-   ```bash
-   uv sync
-   ```
+### 2. Quality Stage
 
-## Running Tests
+The quality stage runs linting and type checking to ensure code quality.
 
-```bash
-uv run pytest
-```
+**Key Steps:**
 
-With coverage:
+- Run ruff for linting
+- Run ruff format for code formatting
+- Run mypy for type checking
 
-```bash
-uv run pytest --cov=src
-```
+### 3. Security Stage
 
-## Running Linters and Type Checking
+The security stage checks for vulnerabilities in dependencies and code.
 
-```bash
-uv run ruff check .
-uv run mypy src/
-```
+**Key Steps:**
 
-## GitHub Actions Configuration
+- Run safety to check dependencies for known vulnerabilities
+- Run bandit to scan code for security issues
 
-The workflow is configured to run automatically when:
+### 4. Deploy Stage
 
-- Pushing to the `main` or `dev` branch
-- Creating a pull request targeting the `main` or `dev` branch
+The deploy stage builds and deploys the application to the staging environment.
 
-The deployment job only runs on the `main` branch and not on pull requests.
+**Key Steps:**
 
-## Workflow
+- Build the application package
+- Run pre-deployment validation
+- Deploy to staging environment
+- Run smoke tests to verify deployment
+
+## Workflow Diagram
+
+The following diagram shows the detailed workflow of our CI/CD pipeline:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -113,6 +104,22 @@ The deployment job only runs on the `main` branch and not on pull requests.
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## License
+## Triggering the Pipeline
 
-MIT
+The pipeline is triggered automatically on:
+
+- Push to `main` or `dev` branches
+- Pull requests to `main` or `dev` branches
+
+The deployment stage only runs on the `main` branch after all previous stages have passed.
+
+## Environment Variables
+
+The pipeline uses the following environment variables:
+
+- `PYTHON_VERSION`: The Python version to use (currently 3.12)
+- `UV_VERSION`: The uv package manager version to use
+
+## Viewing Pipeline Results
+
+You can view the results of the pipeline runs in the GitHub Actions tab of the repository.
