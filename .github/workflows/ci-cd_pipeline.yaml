@@ -90,7 +90,7 @@ jobs:
     needs: [quality, security] # Only deploy if all quality and security checks pass
     runs-on: ubuntu-latest
     environment: staging
-    # if: github.ref == 'refs/heads/main' # Only deploy on main branch
+    if: github.ref == 'refs/heads/main' # Only deploy on main branch
 
     steps:
       - uses: actions/checkout@v4
