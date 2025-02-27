@@ -61,9 +61,9 @@ warn_return_any = true
 disallow_untyped_defs = true
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py312"
-select = ["E", "F", "W", "I"]
+lint.select = ["E", "F", "W", "I"]
 
 [tool.bandit]
 exclude_dirs = ["tests"]
